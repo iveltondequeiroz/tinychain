@@ -1,3 +1,3 @@
 # TINYCHAIN
 
-tiny blockchain
+tiny javascript blockchain to demonstrate how it works
