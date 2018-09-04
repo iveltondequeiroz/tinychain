@@ -2,4 +2,4 @@
 
 tiny javascript blockchain to demonstrate how blockchain technology works
 
-![tinychain](tinychain.png)
+![tinychain](tinychain.PNG)
