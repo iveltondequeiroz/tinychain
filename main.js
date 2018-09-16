@@ -18,7 +18,7 @@ class Block {
   }
 
   calculateHash(){
-    return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString()
+    return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).toString()
   }
 
   mineBlock(difficult){
@@ -28,14 +28,14 @@ class Block {
     }
     console.log("Block mined : "+this.hash)
   }
-
 }
 
 class Blockchain{
   constructor(){
     this.tinychain = [this.createGenesisBlock()]
-    this.difficult = 4
+    this.difficult = 3
     this.pendingTransactions = [];
+    this.miningReward = 100;
   }
 
   createGenesisBlock(){
@@ -70,11 +70,48 @@ class Blockchain{
     // chain is valid
     return true;
   }
+
+  minePendingTransactions(miningRewardAddress){
+      let block = new Block(Date.now(), this.pendingTransactions)
+      block.mineBlock(this.difficult)
+      console.log("Blok successfully mined.")
+      this.tinychain.push(block)
+      this.pendingTransactions = [
+        new Transaction(null, miningRewardAddress, this.miningReward)
+      ] 
+  }
+
+  createTransaction(transaction){
+      this.pendingTransactions.push(transaction)
+  }
+
+  getBalanceOfAddress(address){
+    let balance=0
+    for(const block of this.tinychain){
+      for(const trans of block.transactions){
+        if(trans.fromAddress === address){
+          balance -= trans.amount
+        }
+        if(trans.toAddress === address){
+          balance += trans.amount
+        }
+      }
+    }
+    return balance
+  }
 }
 
 // instantiate tinychain
 let tinyCoin = new Blockchain()
+tinyCoin.createTransaction('address1', 'address2', 100)
+tinyCoin.createTransaction('address2', 'address1', 50)
 
+console.log('Starting the miner...')
+tinyCoin.minePendingTransactions('ivelton-address')
+console.log('Balance of Ivelton is', tinyCoin.getBalanceOfAddress('ivelton-address'))
+console.log('Starting the miner again...')
+tinyCoin.minePendingTransactions('ivelton-address')
+console.log('Balance of Ivelton is', tinyCoin.getBalanceOfAddress('ivelton-address'))
 
 
 //console.log("mining block 1...")
