@@ -1,10 +1,17 @@
 const SHA256 = require('crypto-js/sha256')
 
+class Transaction{
+  constructor(fromAddress, toAddress, amount){
+    this.fromAddress = fromAddress;
+    this.toAddress = toAddress;
+    this.amount = amount;
+  }
+}
+
 class Block {
-  constructor(index, timestamp, data, previousHash=''){
-    this.index = index
+  constructor(timestamp, transactions, previousHash=''){
     this.timestamp = timestamp
-    this.data = data
+    this.transactions = transactions
     this.previousHash = previousHash
     this.hash = this.calculateHash()
     this.nonce = 0
@@ -28,10 +35,11 @@ class Blockchain{
   constructor(){
     this.tinychain = [this.createGenesisBlock()]
     this.difficult = 4
+    this.pendingTransactions = [];
   }
 
   createGenesisBlock(){
-    return new Block(0, "01/01/2018", "Genesis", "0", )
+    return new Block("01/01/2018", "Genesis", "0", )
   }
 
   getLatestBlock(){
@@ -66,11 +74,13 @@ class Blockchain{
 
 // instantiate tinychain
 let tinyCoin = new Blockchain()
-console.log("mining block 1...")
-tinyCoin.addBlock(new Block(1, "01/02/2018", {amount:5}))
-console.log("mining block 2...")
-tinyCoin.addBlock(new Block(2, "02/02/2018", {amount:10}))
 
+
+
+//console.log("mining block 1...")
+//tinyCoin.addBlock(new Block(1, "01/02/2018", {amount:5}))
+//console.log("mining block 2...")
+//tinyCoin.addBlock(new Block(2, "02/02/2018", {amount:10}))
 
 //console.log("is chain valid ? " + tinyCoin.isChainValid())
 // tampering block
